@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* @theme{
+  --color-primary:#E2E8F0;
+  --color-secondary:#3f3f46;
+} */
+
+body {
+  font-family: Poppins, sans-serif;
+  background-color: #f4f4f6;
+}
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: white;
+  }
+}
+
+/* In your globals.css or Tailwind config */
+.input {
+  @apply w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-500;
+}
+.label {
+  @apply block text-sm font-medium;
+}
+
+.error {
+  @apply text-red-500 text-sm;
+}
+
+/* button {
+  background: linear-gradient(to right, rgb(138, 43, 226), rgb(75, 0, 130));
+  color: rgb(255, 255, 255);
+  padding: 8px 20px;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.3s;
+} */
