@@ -14,7 +14,7 @@ const ManageModuleAdminCard = () => {
         </p>
         <Link
           to="/ModuleAdmin"
-          className="mt-2 inline-block w-fit bg-gradient-to-r from-purple-500 to-purple-800 text-white text-sm px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition"
+          className="mt-2 inline-block w-fit bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white text-sm px-4 py-2 rounded-md shadow-sm hover:opacity-90 transition"
         >
           Manage
         </Link>

@@ -139,7 +139,7 @@ const Venue = () => {
             <div className="md:hidden space-y-4">
               <div className="border border-gray-300 rounded-lg overflow-hidden">
                 {/* Table Header */}
-                <div className="flex text-sm font-semibold text-gray-700 bg-gray-50 border-b px-4 py-2">
+                <div className="flex text-sm text-gray-400 border-b border-gray-300 px-4 py-2">
                   <div className="w-1/2">Venue ID</div>
                   <div className="w-1/2">Venue Name</div>
                 </div>
