@@ -13,7 +13,7 @@ const ModuleAdmin = () => {
     { name: "AccoUser", email: "ken98@yahoo.com" },
     { name: "Failed", email: "carmell@hotmail.com" },
     { name: "Success", email: "Silas22@gmail.com" },
-    { name: "Processing", email: "Monserrat44@gmail.com" },
+    { name: "Processing", email: "Monrat44@gmail.com" },
     { name: "Success", email: "Abe456@gmail.com" },
   ];
 
@@ -28,6 +28,8 @@ const ModuleAdmin = () => {
     password: "",
     confirmPassword: "",
     photo: null,
+    cluster: "",
+    venue: "",
   });
 
   const handleChange = (e) => {
@@ -170,6 +172,8 @@ const ModuleAdmin = () => {
                       className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
                     >
                       <option value="">Select Cluster</option>
+                      <option value="Cluster A">Cluster A</option>
+                      <option value="Cluster B">Cluster B</option>
                     </select>
                   </div>
                 </div>
@@ -256,6 +260,8 @@ const ModuleAdmin = () => {
                       className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
                     >
                       <option value="">Select Venue</option>
+                      <option value="Venue A">Venue A</option>
+                      <option value="Venue B">Venue B</option>
                     </select>
                   </div>
                 </div>
@@ -405,77 +411,6 @@ const ModuleAdmin = () => {
                 })}
               </div>
             </div>
-
-            {/* <div className="md:hidden space-y-4">
-              {admins.map((admin, index) => {
-                const isExpanded = expandedIndex === index;
-
-                return (
-                  <div
-                    key={index}
-                    className="bg-white border rounded-lg p-4 shadow-sm"
-                  >
-                    Top row: Name, Email, Toggle Button
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-medium text-sm text-gray-800">
-                          {admin.name}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {admin.email}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() =>
-                          setExpandedIndex(isExpanded ? null : index)
-                        }
-                        className="text-gray-500 focus:outline-none"
-                      >
-                        <svg
-                          className={`w-4 h-4 transition-transform ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-
-                    Expanded Details
-                    {isExpanded && (
-                      <div className="mt-3 text-sm text-gray-700 space-y-2">
-                        <div>
-                          <span className="font-semibold">Phone Number:</span>{" "}
-                          0987654321
-                        </div>
-                        <div>
-                          <span className="font-semibold">Permissions:</span>{" "}
-                          <span className="text-purple-600 underline cursor-pointer">
-                            View Permissions
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button className="bg-[#7942D1] text-white px-3 py-1 rounded text-xs">
-                            User
-                          </button>
-                          <button className="bg-[#7942D1] text-white px-3 py-1 rounded text-xs">
-                            Password
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div> */}
           </div>
         </main>
       </div>

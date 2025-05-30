@@ -7,10 +7,8 @@ import './index.css'
 import App from './App.jsx'
 import VenueDashboard from './pages/VenueDashboard.jsx';
 import ModuleAdmin from './pages/ModuleAdmin.jsx';
-import ClusterPage from './pages/Cluster.jsx';
 import Cluster from './pages/Cluster.jsx';
 import Venue from './pages/Venue.jsx';
-import SportsFacilities from './pages/SportsFacilities.jsx';
 import Facility from './pages/Facility.jsx';
 import Zone from './pages/Zone.jsx';
 

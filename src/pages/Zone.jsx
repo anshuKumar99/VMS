@@ -1,93 +1,3 @@
-// import React, { useState } from "react";
-// import Sidebar from "../components/Sidebar";
-// import Navbar from "../components/Navbar";
-// import CreateZoneModal from "../components/CreateZoneModal";
-
-// const Zone = () => {
-//   const [showModal, setShowModal] = useState(false);
-
-//   const zones = [
-//     {
-//       id: 1,
-//       code: "ZONE001",
-//       name: "North Zone",
-//       region: "North India",
-//     },
-//     {
-//       id: 2,
-//       code: "ZONE002",
-//       name: "South Zone",
-//       region: "South India",
-//     },
-//   ];
-
-//   return (
-//     <div className="flex">
-//       <Sidebar />
-//       <div className="flex-1 flex flex-col">
-//         <Navbar />
-//         <div className="p-4">
-//           <div className="flex justify-between items-center mb-4">
-//             <h1 className="text-2xl font-bold">Zones</h1>
-//             <button
-//               onClick={() => setShowModal(true)}
-//               className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-//             >
-//               + Create Zone
-//             </button>
-//           </div>
-
-//           {/* Table View */}
-//           <div className="hidden md:block">
-//             <table className="w-full table-auto border-collapse">
-//               <thead>
-//                 <tr className="bg-gray-100">
-//                   <th className="border px-4 py-2">Zone Code</th>
-//                   <th className="border px-4 py-2">Zone Name</th>
-//                   <th className="border px-4 py-2">Region</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {zones.map((zone) => (
-//                   <tr key={zone.id}>
-//                     <td className="border px-4 py-2">{zone.code}</td>
-//                     <td className="border px-4 py-2">{zone.name}</td>
-//                     <td className="border px-4 py-2">{zone.region}</td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-
-//           {/* Mobile Card View */}
-//           <div className="md:hidden space-y-4">
-//             {zones.map((zone) => (
-//               <div
-//                 key={zone.id}
-//                 className="border rounded-lg p-4 shadow-sm bg-white"
-//               >
-//                 <p>
-//                   <strong>Code:</strong> {zone.code}
-//                 </p>
-//                 <p>
-//                   <strong>Name:</strong> {zone.name}
-//                 </p>
-//                 <p>
-//                   <strong>Region:</strong> {zone.region}
-//                 </p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//       <CreateZoneModal isOpen={showModal} onClose={() => setShowModal(false)} />
-//     </div>
-//   );
-// };
-
-// export default Zone;
-
-
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -165,17 +75,23 @@ const Zone = () => {
           <div className="bg-white mt-12">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-700">All Zones</h3>
-              <button className="bg-purple-600 text-white px-4 py-1 rounded hover:bg-purple-700 text-sm">
+              <button className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
                 Export Data
               </button>
             </div>
 
-            {/* Search Box */}
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full md:w-1/3 px-4 py-2 mb-4 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            <div className="flex justify-between items-center mb-4">
+              {/* Search Box */}
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full md:w-1/3 px-4 py-2 mb-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+
+              <button className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
+                Export Data
+              </button>
+            </div>
 
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto border border-gray-200 rounded-lg">
@@ -221,7 +137,7 @@ const Zone = () => {
             <div className="md:hidden space-y-4">
               <div className="border border-gray-300 rounded-lg overflow-hidden">
                 {/* Table Header */}
-                <div className="flex text-sm font-semibold text-gray-700 bg-gray-50 border-b px-4 py-2">
+                <div className="flex text-sm text-gray-400 border-b border-gray-300 px-4 py-2">
                   <div className="w-1/2">Zone ID</div>
                   <div className="w-1/2">Zone Name</div>
                 </div>
@@ -263,27 +179,24 @@ const Zone = () => {
                       </div>
 
                       {isExpanded && (
-                        <div className="px-4 py-2 text-sm text-gray-700 space-y-2 bg-gray-50">
-                          <div>
-                            <span className="text-gray-500">Cluster: </span>
-                            <span>{z.clusterName}</span>
+                        <div className="grid grid-cols-2 gap-2 px-4 py-2 space-y-6 text-gray-700">
+                          <div className="text-gray-500">
+                            Zone Supervisor:
                           </div>
-                          <div>
-                            <span className="text-gray-500">Supervisor: </span>
-                            <span>{z.supervisor}</span>
-                          </div>
-                          <div>
-                            <span className="text-gray-500">Capacity: </span>
-                            <span>{z.capacity}</span>
-                          </div>
-                          <div className="flex gap-2 mt-2">
-                            <button className="p-2 rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
+                          <div className="text-gray-800">{z.supervisor}</div>
+
+                          <div className="text-gray-500">Capacity:</div>
+                          <div className="text-gray-800">{z.capacity}</div>
+
+                          <div className="text-gray-500">Action:</div>
+                          <div className="flex gap-2">
+                            <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
                               <FiEye size={16} />
                             </button>
-                            <button className="p-2 rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
+                            <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
                               <FiEdit2 size={16} />
                             </button>
-                            <button className="p-2 rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
+                            <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white">
                               <FiTrash2 size={16} />
                             </button>
                           </div>

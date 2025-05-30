@@ -5,32 +5,87 @@ import * as yup from "yup";
 import axios from "axios";
 
 const schema = yup.object().shape({
-  clusterCode: yup.string().required("Cluster code is required"),
-  clusterName: yup.string().required("Cluster name is required"),
-  latitude: yup.number().required("Latitude is required"),
-  longitude: yup.number().required("Longitude is required"),
-  capacity: yup.number().required("Capacity is required"),
-  radius: yup.number().required("Radius is required"),
-  supervisorName: yup.string().required("Supervisor name is required"),
-  supervisorContact: yup.string().required("Contact number is required"),
-  supervisorEmail: yup.string().email().required("Email is required"),
+  clusterCode: yup
+    .string()
+    .required("Zone code is required")
+    .matches(/^[a-zA-Z0-9]+$/, "Zone code must be alphanumeric")
+    .min(2, "Zone code must be at least 2 characters"),
+
+  clusterName: yup
+    .string()
+    .required("Zone name is required")
+    .matches(
+      /^[a-zA-Z0-9\s]+$/,
+      "Zone name must not contain special characters"
+    )
+    .min(3, "Zone name must be at least 3 characters"),
+
+  latitude: yup
+    .number()
+    .required("Latitude is required")
+    .typeError("Latitude is required")
+    .min(-90, "Latitude must be >= -90")
+    .max(90, "Latitude must be <= 90"),
+
+  longitude: yup
+    .number()
+    .required("Longitude is required")
+    .typeError("Longitude is required")
+    .min(-180, "Longitude must be >= -180")
+    .max(180, "Longitude must be <= 180"),
+
+  radius: yup
+    .number()
+    .required("Radius is required")
+    .typeError("Radius must be a number")
+    .positive("Radius must be a positive number"),
+
   venue: yup.string().required("Venue is required"),
-  description: yup.string(),
+  description: yup.string().required("Description is required"),
+
+  capacity: yup
+    .number()
+    .required("Capacity is required")
+    .typeError("Capacity must be a number")
+    .integer("Capacity must be an integer")
+    .positive("Capacity must be a positive number"),
+
+  supervisorName: yup
+    .string()
+    .required("Supervisor name is required")
+    .matches(
+      /^[a-zA-Z\s]+$/,
+      "Supervisor name must not contain special characters or numbers"
+    )
+    .min(3, "Supervisor name must be at least 3 characters"),
+
+  supervisorEmail: yup
+    .string()
+    .required("Email is required")
+    .email("Enter a valid email address")
+    .matches(
+      /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/,
+      "Enter a valid email"
+    ),
+
+  supervisorContact: yup
+    .string()
+    .required("Contact number is required")
+    .matches(/^[0-9]{10}$/, "Contact must be a 10-digit number"),
+
   image: yup
     .mixed()
     .required("Image is required")
-    .test(
-      "fileSize",
-      "File too large",
-      (value) => value && value[0]?.size <= 1048576
-    )
-    .test(
-      "fileType",
-      "Unsupported format",
-      (value) =>
+    .test("fileSize", "File size must be less than 1MB", (value) => {
+      return value && value[0] && value[0].size <= 1048576;
+    })
+    .test("fileType", "Supported formats: jpeg, jpg, png", (value) => {
+      return (
         value &&
-        ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
-    ),
+        value[0] &&
+        ["image/jpeg", "image/png", "image/jpg"].includes(value[0].type)
+      );
+    }),
 });
 
 const CreateClusterModal = ({ isOpen, onClose }) => {
@@ -85,9 +140,9 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white w-[90%] md:w-2/3 h-4/5 rounded-xl shadow-lg relative animate-fadeIn flex flex-col">
+      <div className="bg-white w-[90%] md:w-3/4 h-4/5 rounded-xl shadow-lg relative animate-fadeIn flex flex-col">
         <button
-          onClick={onClose} 
+          onClick={onClose}
           className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700"
         >
           &times;
@@ -104,7 +159,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Cluster Code</label>
               <input
                 {...register("clusterCode")}
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Cluster Code"
               />
               <p className="error">{errors.clusterCode?.message}</p>
@@ -114,7 +169,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Cluster Name</label>
               <input
                 {...register("clusterName")}
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Cluster Name"
               />
               <p className="error">{errors.clusterName?.message}</p>
@@ -127,7 +182,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
                   <input
                     {...register("latitude")}
                     type="number"
-                    className="input"
+                    className="input text-sm"
                     placeholder="Latitude"
                   />
                   <p className="error">{errors.latitude?.message}</p>
@@ -136,7 +191,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
                   <input
                     {...register("longitude")}
                     type="number"
-                    className="input"
+                    className="input text-sm"
                     placeholder="Longitude"
                   />
                   <p className="error">{errors.longitude?.message}</p>
@@ -149,7 +204,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <input
                 {...register("capacity")}
                 type="number"
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Capacity"
               />
               <p className="error">{errors.capacity?.message}</p>
@@ -160,7 +215,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <input
                 {...register("radius")}
                 type="number"
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Cluster Radius"
               />
               <p className="error">{errors.radius?.message}</p>
@@ -170,7 +225,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Cluster Supervisor</label>
               <input
                 {...register("supervisorName")}
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Supervisor Name"
               />
               <p className="error">{errors.supervisorName?.message}</p>
@@ -180,7 +235,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Supervisor Contact No</label>
               <input
                 {...register("supervisorContact")}
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Supervisor Contact No"
               />
               <p className="error">{errors.supervisorContact?.message}</p>
@@ -190,7 +245,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Supervisor Email</label>
               <input
                 {...register("supervisorEmail")}
-                className="input"
+                className="input text-sm"
                 placeholder="Enter Supervisor Email"
               />
               <p className="error">{errors.supervisorEmail?.message}</p>
@@ -202,7 +257,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
                 type="file"
                 {...register("image")}
                 accept="image/*"
-                className="input"
+                className="input text-sm"
               />
               {imagePreview && (
                 <img
@@ -216,7 +271,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
 
             <div>
               <label className="label">Add Venue</label>
-              <select {...register("venue")} className="input">
+              <select {...register("venue")} className="input text-sm">
                 <option value="">Select Venue</option>
                 <option value="Venue A">Venue A</option>
                 <option value="Venue B">Venue B</option>
@@ -228,7 +283,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
               <label className="label">Description</label>
               <textarea
                 {...register("description")}
-                className="input"
+                className="input text-sm"
                 rows="3"
                 placeholder="Enter Description"
               />
@@ -238,7 +293,7 @@ const CreateClusterModal = ({ isOpen, onClose }) => {
             <div className="col-span-1 sm:col-span-2 text-center">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                className="text-sm bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-6 py-2 rounded hover:bg-purple-700 transition"
               >
                 Save Cluster
               </button>

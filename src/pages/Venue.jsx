@@ -185,10 +185,10 @@ const Venue = () => {
                       {isExpanded && (
                         <div className="grid grid-cols-2 gap-2 px-4 py-2 space-y-6 text-gray-700">
                           <div className="text-gray-500">
-                            Cluster Supervisor:
+                            Venue Supervisor:
                           </div>
                           <div className="text-gray-800">
-                            {v.supervisorName}
+                            {v.supervisor}
                           </div>
 
                           <div className="text-gray-500">Venue:</div>

@@ -13,7 +13,7 @@ const sportsFacilitiesData = [
     zone: "East",
     image: "/images/football.jpg", // sample path
   },
-  // Add more mock data as needed
+  
 ];
 
 export default function SportsFacilities() {
