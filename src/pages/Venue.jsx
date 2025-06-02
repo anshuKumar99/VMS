@@ -3,10 +3,13 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { FiPlus, FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import CreateVenueModal from "../components/CreateVenueModal";
+import ComingSoonModal from "../components/ComingSoonModal";
 
 const Venue = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const venues = [
     {
@@ -24,6 +27,12 @@ const Venue = () => {
       capacity: 150,
     },
   ];
+
+  const filteredVenues = venues.filter((v) =>
+    [v.venueCode, v.venueName, v.clusterName,v.supervisor].some((field) =>
+      field.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div className="flex min-h-screen p-4">
@@ -46,7 +55,7 @@ const Venue = () => {
               {/* Total Venues Card */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 w-full md:w-1/2 h-32 shadow flex flex-col justify-between">
                 <p className="text-sm text-gray-600">Total Venues</p>
-                <p className="text-2xl font-bold text-purple-800">8</p>
+                <p className="text-2xl font-bold text-purple-800">{venues.length}</p>
                 <p className="text-green-500 text-sm">+2 from last month</p>
               </div>
 
@@ -68,6 +77,10 @@ const Venue = () => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
               />
+              <ComingSoonModal
+                isOpen={exportModalOpen}
+                onClose={() => setExportModalOpen(false)}
+              />
             </div>
           </div>
 
@@ -77,7 +90,7 @@ const Venue = () => {
               <h3 className="text-lg font-semibold text-gray-700">
                 All Venues
               </h3>
-              <button className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
+              <button onClick={() => setExportModalOpen(true)} className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
                 Export Data
               </button>
             </div>
@@ -86,11 +99,12 @@ const Venue = () => {
               {/* Search Box */}
               <input
                 type="text"
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search..."
                 className="w-full md:w-1/3 px-4 py-2 mb-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
 
-              <button className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
+              <button onClick={() => setExportModalOpen(true)} className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
                 Export Data
               </button>
             </div>
@@ -109,7 +123,7 @@ const Venue = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {venues.map((venue, index) => (
+                  {filteredVenues.map((venue, index) => (
                     <tr key={index} className="hover:bg-gray-50 text-gray-700">
                       <td className="p-2">{venue.venueCode}</td>
                       <td className="p-2">{venue.venueName}</td>
@@ -143,7 +157,7 @@ const Venue = () => {
                   <div className="w-1/2">Venue ID</div>
                   <div className="w-1/2">Venue Name</div>
                 </div>
-                {venues.map((v, index) => {
+                {filteredVenues.map((v, index) => {
                   const isExpanded = expandedIndex === index;
                   return (
                     <div key={index} className="last:border-b-0">

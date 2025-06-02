@@ -1,12 +1,16 @@
+
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { FiPlus, FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import CreateFacilityModal from "../components/CreateFacilityModal";
+import ComingSoonModal from "../components/ComingSoonModal";
 
 const Facility = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const facilities = [
     {
@@ -24,6 +28,13 @@ const Facility = () => {
       capacity: 100,
     },
   ];
+
+  const filteredFacilities = facilities.filter((facility) =>
+    [facility.facilityCode, facility.facilityName, facility.zoneName, facility.supervisor]
+      .some((field) =>
+        field.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+  );
 
   return (
     <div className="flex min-h-screen p-4">
@@ -46,7 +57,9 @@ const Facility = () => {
               {/* Total Facilities Card */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 w-full md:w-1/2 h-32 shadow flex flex-col justify-between">
                 <p className="text-sm text-gray-600">Total Facilities</p>
-                <p className="text-2xl font-bold text-purple-800">5</p>
+                <p className="text-2xl font-bold text-purple-800">
+                  {facilities.length}
+                </p>
                 <p className="text-green-500 text-sm">+1 from last month</p>
               </div>
 
@@ -68,6 +81,10 @@ const Facility = () => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
               />
+              <ComingSoonModal
+                isOpen={exportModalOpen}
+                onClose={() => setExportModalOpen(false)}
+              />
             </div>
           </div>
 
@@ -77,20 +94,27 @@ const Facility = () => {
               <h3 className="text-lg font-semibold text-gray-700">
                 All Facilities
               </h3>
-              <button className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
+              <button
+                onClick={() => setExportModalOpen(true)}
+                className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm"
+              >
                 Export Data
               </button>
             </div>
 
-             <div className="flex justify-between items-center mb-4">
-              {/* Search Box */}
+            {/* Search + Export */}
+            <div className="flex justify-between items-center mb-4">
               <input
                 type="text"
                 placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full md:w-1/3 px-4 py-2 mb-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-
-              <button className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
+              <button
+                onClick={() => setExportModalOpen(true)}
+                className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700"
+              >
                 Export Data
               </button>
             </div>
@@ -109,7 +133,7 @@ const Facility = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {facilities.map((facility, index) => (
+                  {filteredFacilities.map((facility, index) => (
                     <tr key={index} className="hover:bg-gray-50 text-gray-700">
                       <td className="p-2">{facility.facilityCode}</td>
                       <td className="p-2">{facility.facilityName}</td>
@@ -138,12 +162,11 @@ const Facility = () => {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-4">
               <div className="border border-gray-300 rounded-lg overflow-hidden">
-                {/* Table Header */}
                 <div className="flex text-sm text-gray-400 border-b border-gray-300 px-4 py-2">
                   <div className="w-1/2">Facility ID</div>
                   <div className="w-1/2">Facility Name</div>
                 </div>
-                {facilities.map((f, index) => {
+                {filteredFacilities.map((f, index) => {
                   const isExpanded = expandedIndex === index;
                   return (
                     <div key={index} className="last:border-b-0">

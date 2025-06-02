@@ -3,10 +3,13 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { FiPlus, FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import CreateZoneModal from "../components/CreateZoneModal";
+import ComingSoonModal from "../components/ComingSoonModal";
 
 const Zone = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const zones = [
     {
@@ -24,6 +27,12 @@ const Zone = () => {
       capacity: 250,
     },
   ];
+
+  const filteredZones = zones.filter((zone) =>
+    [zone.zoneCode, zone.zoneName, zone.supervisor].some((field) =>
+      field.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div className="flex min-h-screen p-4">
@@ -46,7 +55,9 @@ const Zone = () => {
               {/* Total Zones Card */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 w-full md:w-1/2 h-32 shadow flex flex-col justify-between">
                 <p className="text-sm text-gray-600">Total Zones</p>
-                <p className="text-2xl font-bold text-purple-800">5</p>
+                <p className="text-2xl font-bold text-purple-800">
+                  {zones.length}
+                </p>
                 <p className="text-green-500 text-sm">+1 from last month</p>
               </div>
 
@@ -68,6 +79,10 @@ const Zone = () => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
               />
+              <ComingSoonModal
+                isOpen={exportModalOpen}
+                onClose={() => setExportModalOpen(false)}
+              />
             </div>
           </div>
 
@@ -75,7 +90,10 @@ const Zone = () => {
           <div className="bg-white mt-12">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-700">All Zones</h3>
-              <button className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
+              <button
+                onClick={() => setExportModalOpen(true)}
+                className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm"
+              >
                 Export Data
               </button>
             </div>
@@ -85,10 +103,11 @@ const Zone = () => {
               <input
                 type="text"
                 placeholder="Search..."
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full md:w-1/3 px-4 py-2 mb-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
 
-              <button className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
+              <button onClick={() => setExportModalOpen(true)} className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
                 Export Data
               </button>
             </div>
@@ -107,7 +126,7 @@ const Zone = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {zones.map((zone, index) => (
+                  {filteredZones.map((zone, index) => (
                     <tr key={index} className="hover:bg-gray-50 text-gray-700">
                       <td className="p-2">{zone.zoneCode}</td>
                       <td className="p-2">{zone.zoneName}</td>
@@ -141,7 +160,7 @@ const Zone = () => {
                   <div className="w-1/2">Zone ID</div>
                   <div className="w-1/2">Zone Name</div>
                 </div>
-                {zones.map((z, index) => {
+                {filteredZones.map((z, index) => {
                   const isExpanded = expandedIndex === index;
                   return (
                     <div key={index} className="last:border-b-0">
@@ -180,9 +199,7 @@ const Zone = () => {
 
                       {isExpanded && (
                         <div className="grid grid-cols-2 gap-2 px-4 py-2 space-y-6 text-gray-700">
-                          <div className="text-gray-500">
-                            Zone Supervisor:
-                          </div>
+                          <div className="text-gray-500">Zone Supervisor:</div>
                           <div className="text-gray-800">{z.supervisor}</div>
 
                           <div className="text-gray-500">Capacity:</div>

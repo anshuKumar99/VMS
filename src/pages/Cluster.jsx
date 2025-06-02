@@ -7,9 +7,13 @@ import { GoPlus } from "react-icons/go";
 import { LuPlus } from "react-icons/lu";
 import { FiPlus } from "react-icons/fi";
 import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
+import ComingSoonModal from "../components/ComingSoonModal";
 
 const Cluster = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const clusters = [
     {
       clusterCode: "C101",
@@ -36,6 +40,12 @@ const Cluster = () => {
 
   const [expandedIndex, setExpandedIndex] = useState(null);
 
+  const filteredClusters = clusters.filter((c) =>
+    [c.clusterCode, c.clusterName, c.venue, c.supervisorName].some((field) =>
+      field.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   return (
     <div className="flex min-h-screen p-4">
       <Sidebar />
@@ -58,7 +68,7 @@ const Cluster = () => {
               {/* Total Clusters Card */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 w-full md:w-1/2 h-32 shadow flex flex-col justify-between">
                 <p className="text-sm text-gray-600">Total Clusters</p>
-                <p className="text-2xl font-bold text-purple-800">12</p>
+                <p className="text-2xl font-bold text-purple-800">{clusters.length}</p>
                 <p className="text-green-500 text-sm">+4 from last month</p>
               </div>
 
@@ -82,6 +92,10 @@ const Cluster = () => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
               />
+              <ComingSoonModal
+                isOpen={exportModalOpen}
+                onClose={() => setExportModalOpen(false)}
+              />
             </div>
           </div>
 
@@ -91,7 +105,10 @@ const Cluster = () => {
               <h3 className="text-lg font-semibold text-gray-700">
                 All Clusters
               </h3>
-              <button className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm">
+              <button
+                onClick={() => setExportModalOpen(true)}
+                className="md:hidden bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm"
+              >
                 Export Data
               </button>
             </div>
@@ -100,11 +117,15 @@ const Cluster = () => {
               {/* Search Box */}
               <input
                 type="text"
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search..."
                 className="w-full md:w-1/3 px-4 py-2 mb-4 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
 
-              <button className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700">
+              <button
+                onClick={() => setExportModalOpen(true)}
+                className="hidden md:block bg-gradient-to-r from-[#7942D1] to-[#2A1647] text-white px-4 py-2 rounded-md hover:bg-purple-700"
+              >
                 Export Data
               </button>
             </div>
@@ -122,7 +143,7 @@ const Cluster = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {clusters.map((cluster, index) => (
+                  {filteredClusters.map((cluster, index) => (
                     <tr key={index} className="hover:bg-gray-50 text-gray-700">
                       <td className="p-2">{cluster.clusterCode}</td>
                       <td className="p-2">{cluster.clusterName}</td>
@@ -172,7 +193,7 @@ const Cluster = () => {
                 </div>
 
                 {/* Table Rows */}
-                {clusters.map((c, index) => {
+                {filteredClusters.map((c, index) => {
                   const isExpanded = expandedIndex === index;
                   return (
                     <div key={index} className=" last:border-b-0">
@@ -224,7 +245,9 @@ const Cluster = () => {
 
                       {isExpanded && (
                         <div className="grid grid-cols-2 gap-2 px-4 py-2 space-y-6 text-gray-700">
-                          <div className="text-gray-500">Cluster Supervisor:</div>
+                          <div className="text-gray-500">
+                            Cluster Supervisor:
+                          </div>
                           <div className="text-gray-800">
                             {c.supervisorName}
                           </div>
